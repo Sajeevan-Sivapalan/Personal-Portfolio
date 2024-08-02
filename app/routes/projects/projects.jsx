@@ -26,12 +26,6 @@ import { media } from '~/utils/style';
 import styles from './projects.module.css';
 import { Button } from '~/components/button';
 
-
-const Earth = lazy(() => import('./earth').then(module => ({ default: module.Earth })));
-const EarthSection = lazy(() =>
-  import('./earth').then(module => ({ default: module.EarthSection }))
-);
-
 const title = '';
 const description = '';
 const roles = [];
