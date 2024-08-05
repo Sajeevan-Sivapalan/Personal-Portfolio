@@ -1,5 +1,5 @@
 <h1 align="center">Personal portfolio</h1>
-
+ 
 ## Install & run
 
 Make sure you have nodejs `19.9.0` or higher and npm `9.6.3` or higher installed. Install dependencies with:
