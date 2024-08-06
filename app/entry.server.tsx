@@ -1,8 +1,9 @@
 import { RemixServer } from '@remix-run/react';
 import { EntryContext } from '@remix-run/node';
 import pkg from 'react-dom/server';
+import { renderToReadableStream } from 'react-dom/server';
 
-const { renderToReadableStream } = pkg;
+//const { renderToReadableStream } = pkg;
 
 export default async function handleRequest(
   request: Request,
