@@ -30,6 +30,8 @@ export default async function handleRequest(
     });
   } catch (error) {
     console.error('Error during rendering:', error);
+    console.error("Request : " + request + " , " + " Response Status Code : " + responseStatusCode + 
+      + " , " + " Response Headers : " + responseHeaders + " , " + " Remix Context : " + remixContext);
     return new Response('Internal Server Error', { status: 500 });
   }
 }
