@@ -16,9 +16,10 @@
   "dependencies": {
     "@aws-sdk/client-ses": "^3.515.0",
     "@mdx-js/react": "^3.0.1",
-    "@remix-run/cloudflare": "^2.10.3",
+    "@remix-run/cloudflare": "^2.11.1",
     "@remix-run/cloudflare-pages": "^2.7.1",
-    "@remix-run/react": "^2.7.1",
+    "@remix-run/react": "^2.11.1",
+    "@remix-run/server-runtime": "^2.11.1",
     "framer-motion": "11.0.5",
     "isbot": "^4.1.0",
     "miniflare": "^3.20231030.4",
