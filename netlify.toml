@@ -1,5 +1,5 @@
 
 [[redirects]]
   from = "/*"
-  to = "routes/home/route.js"
+  to = "~/routes/home/route.js"
   status = 200
