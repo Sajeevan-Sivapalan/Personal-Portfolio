@@ -1,7 +1,6 @@
+import { renderToReadableStream } from 'react-dom/server';
 import { RemixServer } from '@remix-run/react';
 import { EntryContext } from '@remix-run/node';
-import pkg from 'react-dom/server';
-const { renderToReadableStream } = pkg;
 
 export default async function handleRequest(
   request: Request,
@@ -9,16 +8,27 @@ export default async function handleRequest(
   responseHeaders: Headers,
   remixContext: EntryContext
 ) {
-  // Use renderToReadableStream to generate a readable stream of the HTML
-  const body = await renderToReadableStream(
-    <RemixServer context={remixContext} url={request.url} />,
-    { signal: request.signal }
-  );
+  try {
+    // Generate a readable stream of the HTML
+    const body = await renderToReadableStream(
+      <RemixServer context={remixContext} url={request.url} />,
+      {
+        signal: request.signal,
+        onError(error) {
+          console.error('Rendering error:', error);
+          responseStatusCode = 500; // Ensure status code reflects error
+        }
+      }
+    );
 
-  responseHeaders.set('Content-Type', 'text/html');
+    responseHeaders.set('Content-Type', 'text/html');
 
-  return new Response(body, {
-    headers: responseHeaders,
-    status: responseStatusCode,
-  });
+    return new Response(body, {
+      headers: responseHeaders,
+      status: responseStatusCode,
+    });
+  } catch (error) {
+    console.error('Error during rendering:', error);
+    return new Response('Internal Server Error', { status: 500 });
+  }
 }
