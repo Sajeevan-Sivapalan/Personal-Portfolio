@@ -99,8 +99,6 @@ export function ProjectSummary({
   }
 
   function renderPreview(visible) {
-    console.log("Preview : " + visible);
-    
     try {
       return (
         <div className={styles.preview}>
@@ -201,7 +199,7 @@ export function ProjectSummary({
             <>
               {!alternate && !isMobile && (
                 <>
-                  {console.log("lap " + renderDetails(true))}
+                  {renderDetails(true)}
                   {renderPreview(true)}
                 </>
               )}
