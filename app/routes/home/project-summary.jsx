@@ -99,6 +99,7 @@ export function ProjectSummary({
   }
 
   function renderPreview(visible) {
+    console.log("Preview : " + visible);
     return (
       <div className={styles.preview}>
         {model.type === 'laptop' && (
