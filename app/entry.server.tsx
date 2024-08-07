@@ -1,6 +1,6 @@
 import { RemixServer } from '@remix-run/react';
 import { EntryContext } from '@remix-run/node';
-import pkg from 'react-dom/server';
+import pkg from 'react-dom/server.browser';
 
 const { renderToReadableStream } = pkg;
 
