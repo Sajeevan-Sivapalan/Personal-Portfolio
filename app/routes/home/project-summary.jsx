@@ -1,4 +1,4 @@
-import { Button } from '~/components/button';
+import { Button } from './button/button';
 import { Divider } from '~/components/divider';
 import { Heading } from '~/components/heading';
 import { deviceModels } from '~/components/model/device-models';
