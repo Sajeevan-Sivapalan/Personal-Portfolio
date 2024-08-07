@@ -15,7 +15,7 @@ import katakana from './katakana.svg';
 import styles from './project-summary.module.css';
 
 const Model = lazy(() =>
-  import('~/components/model').then(module => ({ default: module.Model }))
+  import('../../components/model').then(module => ({ default: module.Model }))
 );
 
 export function ProjectSummary({
