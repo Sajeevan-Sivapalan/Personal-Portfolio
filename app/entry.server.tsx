@@ -1,6 +1,7 @@
 import { RemixServer } from '@remix-run/react';
 import { EntryContext } from '@remix-run/node';
 import pkg from 'react-dom/server.browser';
+import React from 'react';
 
 const { renderToReadableStream } = pkg;
 
@@ -14,7 +15,7 @@ export default async function handleRequest(
     const body = await renderToReadableStream(
       <RemixServer context={remixContext} url={request.url} />,
       {
-        //signal: //request.signal,
+        signal: request.signal,
         onError(error) {
           console.error('Rendering error:', error);
           responseStatusCode = 500;
