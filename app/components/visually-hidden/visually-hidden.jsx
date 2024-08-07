@@ -1,5 +1,5 @@
 import { forwardRef } from 'react';
-import { classes } from '~/utils/style';
+import { classes } from '../../utils/style';
 import styles from './visually-hidden.module.css';
 
 export const VisuallyHidden = forwardRef(

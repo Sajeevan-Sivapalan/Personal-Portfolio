@@ -1,5 +1,5 @@
 import { useRouteError } from '@remix-run/react';
-import { Error } from '~/layouts/error';
+import { Error } from '../layouts/error';
 
 export async function loader() {
   throw new Response(null, { status: 404, statusText: 'Not found' });

@@ -1,4 +1,4 @@
-import { classes } from '~/utils/style';
+import { classes } from '../../utils/style';
 import styles from './text.module.css';
 
 export const Text = ({

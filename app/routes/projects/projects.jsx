@@ -1,14 +1,14 @@
-import backgroundSprLarge from '~/assets/spr-background-large.jpg';
-import backgroundSprPlaceholder from '~/assets/spr-background-placeholder.jpg';
-import imageSprBackgroundVolcanismLarge from '~/assets/spr-background-volcanism-large.jpg';
-import imageSprBackgroundVolcanismPlaceholder from '~/assets/spr-background-volcanism-placeholder.jpg';
-import imageSprBackgroundVolcanism from '~/assets/spr-background-volcanism.jpg';
-import backgroundSpr from '~/assets/spr-background.jpg';
-import videoSprMotionPlaceholder from '~/assets/gamestack-list-placeholder.jpg';
-import githubIntro from '~/assets/github_intro.mp4';
-import { Footer } from '~/components/footer';
-import { Image } from '~/components/image';
-import { ThemeProvider, useTheme } from '~/components/theme-provider';
+import backgroundSprLarge from '../../assets/spr-background-large.jpg';
+import backgroundSprPlaceholder from '../../assets/spr-background-placeholder.jpg';
+import imageSprBackgroundVolcanismLarge from '../../assets/spr-background-volcanism-large.jpg';
+import imageSprBackgroundVolcanismPlaceholder from '../../assets/spr-background-volcanism-placeholder.jpg';
+import imageSprBackgroundVolcanism from '../../assets/spr-background-volcanism.jpg';
+import backgroundSpr from '../../assets/spr-background.jpg';
+import videoSprMotionPlaceholder from '../../assets/gamestack-list-placeholder.jpg';
+import githubIntro from '../../assets/github_intro.mp4';
+import { Footer } from '../../components/footer';
+import { Image } from '../../components/image';
+import { ThemeProvider, useTheme } from '../../components/theme-provider';
 import {
   ProjectBackground,
   ProjectContainer,
@@ -19,12 +19,12 @@ import {
   ProjectSectionHeading,
   ProjectSectionText,
   ProjectTextRow,
-} from '~/layouts/project';
-import { baseMeta } from '~/utils/meta';
+} from '../../layouts/project';
+import { baseMeta } from '../../utils/meta';
 import { lazy } from 'react';
-import { media } from '~/utils/style';
+import { media } from '../../utils/style';
 import styles from './projects.module.css';
-import { Button } from '~/components/button';
+import { Button } from '../../components/button';
 
 const title = '';
 const description = '';

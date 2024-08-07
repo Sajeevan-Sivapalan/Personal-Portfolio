@@ -1,4 +1,4 @@
-import { formatTimecode, readingTime } from '~/utils/timecode';
+import { formatTimecode, readingTime } from '../../utils/timecode';
 
 export async function getPosts() {
   const modules = import.meta.glob('../articles.*.mdx', { eager: true });

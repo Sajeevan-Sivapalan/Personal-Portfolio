@@ -1,16 +1,16 @@
-import { Divider } from '~/components/divider';
-import { Footer } from '~/components/footer';
-import { Heading } from '~/components/heading';
-import { Image } from '~/components/image';
-import { Section } from '~/components/section';
-import { Text } from '~/components/text';
-import { tokens } from '~/components/theme-provider/theme';
-import { Transition } from '~/components/transition';
+import { Divider } from '../../components/divider';
+import { Footer } from '../../components/footer';
+import { Heading } from '../../components/heading';
+import { Image } from '../../components/image';
+import { Section } from '../../components/section';
+import { Text } from '../../components/text';
+import { tokens } from '../../components/theme-provider/theme';
+import { Transition } from '../../components/transition';
 import { useParallax, useScrollToHash } from '~/hooks';
 import { useRef, useState, useEffect } from 'react';
-import { clamp } from '~/utils/clamp';
-import { formatDate } from '~/utils/date';
-import { cssProps, msToNum, numToMs } from '~/utils/style';
+import { clamp } from '../../utils/clamp';
+import { formatDate } from '../../utils/date';
+import { cssProps, msToNum, numToMs } from '../../utils/style';
 import styles from './post.module.css';
 import { Link as RouterLink } from '@remix-run/react';
 
