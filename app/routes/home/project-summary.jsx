@@ -199,14 +199,14 @@ export function ProjectSummary({
             <>
               {!alternate && !isMobile && (
                 <>
-                  {renderDetails(true)}
-                  {renderPreview(true)}
+                  {renderDetails(visible)}
+                  {renderPreview(visible)}
                 </>
               )}
               {(alternate || isMobile) && (
                 <>
-                  {renderPreview(true)}
-                  {renderDetails(true)}
+                  {renderPreview(visible)}
+                  {renderDetails(visible)}
                 </>
               )}
             </>
