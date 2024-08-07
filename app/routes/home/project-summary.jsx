@@ -1,21 +1,21 @@
 import { Button } from '../../components/button';
-import { Divider } from '../../components/divider';
-import { Heading } from '../../components/heading';
-import { deviceModels } from '../../components/model/device-models';
-import { Section } from '../../components/section';
-import { Text } from '../../components/text';
-import { useTheme } from '../../components/theme-provider';
-import { Transition } from '../../components/transition';
-import { Loader } from '../../components/loader';
-import { useWindowSize } from '../../hooks';
+import { Divider } from '~/components/divider';
+import { Heading } from '~/components/heading';
+import { deviceModels } from '~/components/model/device-models';
+import { Section } from '~/components/section';
+import { Text } from '~/components/text';
+import { useTheme } from '~/components/theme-provider';
+import { Transition } from '~/components/transition';
+import { Loader } from '~/components/loader';
+import { useWindowSize } from '~/hooks';
 import { Suspense, lazy, useState } from 'react';
-import { cssProps, media } from '../../utils/style';
-import { useHydrated } from '../../hooks/useHydrated';
+import { cssProps, media } from '~/utils/style';
+import { useHydrated } from '~/hooks/useHydrated';
 import katakana from './katakana.svg';
 import styles from './project-summary.module.css';
 
 const Model = lazy(() =>
-  import('../../components/model').then(module => ({ default: module.Model }))
+  import('~/components/model').then(module => ({ default: module.Model }))
 );
 
 export function ProjectSummary({
