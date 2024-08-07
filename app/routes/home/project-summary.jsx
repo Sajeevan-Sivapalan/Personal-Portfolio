@@ -201,7 +201,7 @@ export function ProjectSummary({
             <>
               {!alternate && !isMobile && (
                 <>
-                  {renderDetails(true)}
+                  {console.log("lap " + renderDetails(true))}
                   {renderPreview(true)}
                 </>
               )}
