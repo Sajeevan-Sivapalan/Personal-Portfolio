@@ -1,5 +1,5 @@
-import { useTheme } from '../../components/theme-provider';
-import { Transition } from '../../components/transition';
+import { useTheme } from '~/components/theme-provider';
+import { Transition } from '~/components/transition';
 import { useReducedMotion, useSpring } from 'framer-motion';
 import { useInViewport, useWindowSize } from '~/hooks';
 import { startTransition, useEffect, useRef } from 'react';
@@ -16,9 +16,9 @@ import {
   Vector2,
   WebGLRenderer,
 } from 'three';
-import { media } from '../../utils/style';
-import { throttle } from '../../utils/throttle';
-import { cleanRenderer, cleanScene, removeLights } from '../../utils/three';
+import { media } from '~/utils/style';
+import { throttle } from '~/utils/throttle';
+import { cleanRenderer, cleanScene, removeLights } from '~/utils/three';
 import fragmentShader from './displacement-sphere-fragment.glsl?raw';
 import vertexShader from './displacement-sphere-vertex.glsl?raw';
 import styles from './displacement-sphere.module.css';

@@ -14,7 +14,7 @@ export default async function handleRequest(
     const body = await renderToReadableStream(
       <RemixServer context={remixContext} url={request.url} />,
       {
-        signal: request.signal,
+        //signal: //request.signal,
         onError(error) {
           console.error('Rendering error:', error);
           responseStatusCode = 500;

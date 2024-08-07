@@ -1,20 +1,20 @@
-import profileImgLarge from '../../assets/profile.jpeg';
-import profileImgPlaceholder from '../../assets/profile-placeholder.jpg';
-import profileImg from '../../assets/profile.jpeg';
-import { Button } from '../../components/button';
-import { DecoderText } from '../../components/decoder-text';
-import { Divider } from '../../components/divider';
-import { Heading } from '../../components/heading';
-import { Image } from '../../components/image';
-import { Link } from '../../components/link';
-import { Section } from '../../components/section';
-import { Text } from '../../components/text';
-import { Transition } from '../../components/transition';
+import profileImgLarge from '~/assets/profile.jpeg';
+import profileImgPlaceholder from '~/assets/profile-placeholder.jpg';
+import profileImg from '~/assets/profile.jpeg';
+import { Button } from '~/components/button';
+import { DecoderText } from '~/components/decoder-text';
+import { Divider } from '~/components/divider';
+import { Heading } from '~/components/heading';
+import { Image } from '~/components/image';
+import { Link } from '~/components/link';
+import { Section } from '~/components/section';
+import { Text } from '~/components/text';
+import { Transition } from '~/components/transition';
 import { Fragment, useState } from 'react';
-import { media } from '../../utils/style';
+import { media } from '~/utils/style';
 import katakana from '~/routes/home/katakana.svg';
 import styles from './profile.module.css';
-import { baseMeta } from '../../utils/meta';
+import { baseMeta } from '~/utils/meta';
 import {
   ProjectContainer,
   ProjectSection,
@@ -23,14 +23,14 @@ import {
   ProjectSectionHeading,
   ProjectSectionText,
   ProjectTextRow,
-} from '../../layouts/project';
-import { ThemeProvider } from '../../components/theme-provider';
-import imageSprBackgroundVolcanismLarge from '../../assets/spr-background-volcanism-large.jpg';
-import imageSprBackgroundVolcanismPlaceholder from '../../assets/spr-background-volcanism-placeholder.jpg';
-import imageSprBackgroundVolcanism from '../../assets/spr-background-volcanism.jpg';
+} from '~/layouts/project';
+import { ThemeProvider } from '~/components/theme-provider';
+import imageSprBackgroundVolcanismLarge from '~/assets/spr-background-volcanism-large.jpg';
+import imageSprBackgroundVolcanismPlaceholder from '~/assets/spr-background-volcanism-placeholder.jpg';
+import imageSprBackgroundVolcanism from '~/assets/spr-background-volcanism.jpg';
 import { ProjectSummary } from '../home/project-summary';
-import sprTexturePlaceholder from '../../assets/spr-lesson-builder-dark-placeholder.jpg';
-import linkedInShowcase from '../../assets/linked-in-common-bg-1.jpg';
+import sprTexturePlaceholder from '~/assets/spr-lesson-builder-dark-placeholder.jpg';
+import linkedInShowcase from '~/assets/linked-in-common-bg-1.jpg';
 import { useEffect, useRef } from 'react';
 
 const ProfileText = ({ visible, titleId }) => (

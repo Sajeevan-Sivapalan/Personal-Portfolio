@@ -1,4 +1,4 @@
-import { Heading } from '../../components/heading';
+import { Heading } from '~/components/heading';
 import { StoryContainer } from '../../../.storybook/story-container';
 
 export default {

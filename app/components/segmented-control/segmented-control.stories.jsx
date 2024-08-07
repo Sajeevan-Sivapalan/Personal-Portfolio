@@ -1,4 +1,4 @@
-import { SegmentedControl, SegmentedControlOption } from '../../components/segmented-control';
+import { SegmentedControl, SegmentedControlOption } from '~/components/segmented-control';
 import { useState } from 'react';
 import { StoryContainer } from '../../../.storybook/story-container';
 

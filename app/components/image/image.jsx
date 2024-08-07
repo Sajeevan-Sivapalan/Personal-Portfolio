@@ -1,11 +1,11 @@
-import { Button } from '../../components/button';
-import { Icon } from '../../components/icon';
-import { useTheme } from '../../components/theme-provider';
+import { Button } from '~/components/button';
+import { Icon } from '~/components/icon';
+import { useTheme } from '~/components/theme-provider';
 import { useReducedMotion } from 'framer-motion';
 import { useHasMounted, useInViewport } from '~/hooks';
 import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
-import { resolveSrcFromSrcSet } from '../../utils/image';
-import { classes, cssProps, numToMs } from '../../utils/style';
+import { resolveSrcFromSrcSet } from '~/utils/image';
+import { classes, cssProps, numToMs } from '~/utils/style';
 import styles from './image.module.css';
 
 export const Image = ({

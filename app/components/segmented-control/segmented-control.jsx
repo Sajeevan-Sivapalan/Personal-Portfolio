@@ -1,4 +1,4 @@
-import { VisuallyHidden } from '../../components/visually-hidden';
+import { VisuallyHidden } from '~/components/visually-hidden';
 import {
   createContext,
   useCallback,
@@ -8,7 +8,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { cssProps } from '../../utils/style';
+import { cssProps } from '~/utils/style';
 import styles from './segmented-control.module.css';
 
 const SegmentedControlContext = createContext({});

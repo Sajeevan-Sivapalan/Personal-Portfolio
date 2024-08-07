@@ -1,17 +1,17 @@
-import { Button } from '../../components/button';
-import { DecoderText } from '../../components/decoder-text';
-import { Divider } from '../../components/divider';
-import { Footer } from '../../components/footer';
-import { Heading } from '../../components/heading';
-import { Image } from '../../components/image';
-import { Section } from '../../components/section';
-import { Text } from '../../components/text';
+import { Button } from '~/components/button';
+import { DecoderText } from '~/components/decoder-text';
+import { Divider } from '~/components/divider';
+import { Footer } from '~/components/footer';
+import { Heading } from '~/components/heading';
+import { Image } from '~/components/image';
+import { Section } from '~/components/section';
+import { Text } from '~/components/text';
 import { useReducedMotion } from 'framer-motion';
 import { useWindowSize } from '~/hooks';
 import { Link as RouterLink, useLoaderData } from '@remix-run/react';
 import { useState, useEffect } from 'react';
-import { formatDate } from '../../utils/date';
-import { classes, cssProps } from '../../utils/style';
+import { formatDate } from '~/utils/date';
+import { classes, cssProps } from '~/utils/style';
 import styles from './articles.module.css';
 
 function ArticlesPost({ slug, frontmatter, timecode, index }) {
