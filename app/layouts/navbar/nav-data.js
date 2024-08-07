@@ -1,38 +1,30 @@
-import config from '~/config.json';
-
 export const navLinks = [
   {
-    label: 'Projects',
-    pathname: '/#project-1',
+    label: 'Home',
+    pathname: '/',
   },
   {
-    label: 'Details',
-    pathname: '/#details',
+    label: 'Projects',
+    pathname: '/#project-container',
+  },
+  {
+    label: 'Profile',
+    pathname: '/#about-me-container',
   },
   {
     label: 'Articles',
-    pathname: '/articles',
+    pathname: '/#article-container',
   },
   {
     label: 'Contact',
-    pathname: '/contact',
+    pathname: '/#contact-container',
   },
 ];
 
 export const socialLinks = [
   {
-    label: 'Twitter',
-    url: `https://twitter.com/${config.twitter}`,
-    icon: 'twitter',
-  },
-  {
-    label: 'Figma',
-    url: `https://www.figma.com/${config.figma}`,
-    icon: 'figma',
-  },
-  {
     label: 'Github',
-    url: `https://github.com/${config.github}`,
+    url: `https://github.com/Sajeevan-Sivapalan`,
     icon: 'github',
   },
 ];

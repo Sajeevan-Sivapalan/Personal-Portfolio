@@ -1,22 +1,18 @@
-import gamestackTexture2Large from '~/assets/gamestack-list-large.jpg';
 import gamestackTexture2Placeholder from '~/assets/gamestack-list-placeholder.jpg';
-import gamestackTexture2 from '~/assets/gamestack-list.jpg';
-import gamestackTextureLarge from '~/assets/gamestack-login-large.jpg';
 import gamestackTexturePlaceholder from '~/assets/gamestack-login-placeholder.jpg';
-import gamestackTexture from '~/assets/gamestack-login.jpg';
-import sliceTextureLarge from '~/assets/slice-app-large.jpg';
 import sliceTexturePlaceholder from '~/assets/slice-app-placeholder.jpg';
-import sliceTexture from '~/assets/slice-app.jpg';
-import sprTextureLarge from '~/assets/spr-lesson-builder-dark-large.jpg';
 import sprTexturePlaceholder from '~/assets/spr-lesson-builder-dark-placeholder.jpg';
-import sprTexture from '~/assets/spr-lesson-builder-dark.jpg';
+import projectShowcase from '~/assets/projects-common-bg.jpg';
+import articleShowcase from '~/assets/article-common-bg.jpg';
+import aboutShowcase1 from '~/assets/about-me-common-bg-1.jpg';
+import contactShowcase1 from '~/assets/contact-common-bg-1.jpg';
+import aboutShowcase2 from '~/assets/about-me-common-bg-2.jpg';
+import contactShowcase2 from '~/assets/contact-common-bg-2.jpg';
 import { Footer } from '~/components/footer';
 import { baseMeta } from '~/utils/meta';
 import { Intro } from './intro';
-import { Profile } from './profile';
 import { ProjectSummary } from './project-summary';
 import { useEffect, useRef, useState } from 'react';
-import config from '~/config.json';
 import styles from './home.module.css';
 
 // Prefetch draco decoader wasm
@@ -41,8 +37,8 @@ export const links = () => {
 
 export const meta = () => {
   return baseMeta({
-    title: 'Designer + Developer',
-    description: `Design portfolio of ${config.name} — a product designer working on web & mobile apps with a focus on motion, experience design, and accessibility.`,
+    title: '',
+    description: ``,
   });
 };
 
@@ -50,13 +46,14 @@ export const Home = () => {
   const [visibleSections, setVisibleSections] = useState([]);
   const [scrollIndicatorHidden, setScrollIndicatorHidden] = useState(false);
   const intro = useRef();
-  const projectOne = useRef();
-  const projectTwo = useRef();
-  const projectThree = useRef();
-  const details = useRef();
+  const projects = useRef();
+  const profile = useRef();
+  const article = useRef();
+  const contact = useRef();
 
   useEffect(() => {
-    const sections = [intro, projectOne, projectTwo, projectThree, details];
+    //const sections = [intro, projects, profile, article, details];
+    const sections = [intro, projects, profile, article, contact];
 
     const sectionObserver = new IntersectionObserver(
       (entries, observer) => {
@@ -99,74 +96,94 @@ export const Home = () => {
         scrollIndicatorHidden={scrollIndicatorHidden}
       />
       <ProjectSummary
-        id="project-1"
-        sectionRef={projectOne}
-        visible={visibleSections.includes(projectOne.current)}
+        id="project-container"
+        sectionRef={projects}
+        visible={visibleSections.includes(projects.current)}
         index={1}
-        title="Designing the future of education"
-        description="Designing a platform to help educators build better online courseware"
+        title="My Projects"
+        description="Explore a showcase of my latest work, featuring a diverse array of creative and technical projects."
         buttonText="View project"
-        buttonLink="/projects/smart-sparrow"
+        buttonLink="/projects"
         model={{
           type: 'laptop',
-          alt: 'Smart Sparrow lesson builder',
+          alt: 'An image showcasing a completed project, highlighting the intricate details and design elements',
           textures: [
             {
-              srcSet: `${sprTexture} 1280w, ${sprTextureLarge} 2560w`,
+              srcSet: `${projectShowcase} 1280w, ${projectShowcase} 2560w`,
               placeholder: sprTexturePlaceholder,
             },
           ],
         }}
       />
       <ProjectSummary
-        id="project-2"
+        id="about-me-container"
         alternate
-        sectionRef={projectTwo}
-        visible={visibleSections.includes(projectTwo.current)}
+        sectionRef={profile}
+        visible={visibleSections.includes(profile.current)}
         index={2}
-        title="Video game progress tracking"
-        description="Design and development for a video game tracking app built in React Native"
-        buttonText="View website"
-        buttonLink="https://gamestack.hamishw.com"
+        title="About Me"
+        description="Get to know more about my background, skills, and the journey that has shaped my career and passions."
+        buttonText="View"
+        buttonLink="/profile"
         model={{
           type: 'phone',
-          alt: 'App login screen',
+          alt: 'A professional headshot of me, smiling and looking approachable, set against a neutral background.',
           textures: [
             {
-              srcSet: `${gamestackTexture} 375w, ${gamestackTextureLarge} 750w`,
+              srcSet: `${aboutShowcase1} 375w, ${aboutShowcase1} 750w`,
               placeholder: gamestackTexturePlaceholder,
             },
             {
-              srcSet: `${gamestackTexture2} 375w, ${gamestackTexture2Large} 750w`,
+              srcSet: `${aboutShowcase2} 375w, ${aboutShowcase2} 750w`,
               placeholder: gamestackTexture2Placeholder,
             },
           ],
         }}
       />
       <ProjectSummary
-        id="project-3"
-        sectionRef={projectThree}
-        visible={visibleSections.includes(projectThree.current)}
+        id="article-container"
+        sectionRef={article}
+        visible={visibleSections.includes(article.current)}
         index={3}
-        title="Biomedical image collaboration"
-        description="Increasing the amount of collaboration in Slice, an app for biomedical imaging"
-        buttonText="View project"
-        buttonLink="/projects/slice"
+        title="Articles"
+        description="Dive into my articles, where I share insights, stories, and tips on various topics that inspire me."
+        buttonText="View articles"
+        buttonLink="/articles"
         model={{
           type: 'laptop',
-          alt: 'Annotating a biomedical image in the Slice app',
+          alt: 'An image of an open laptop with a articles post on the screen, symbolizing the process of writing and sharing ideas.',
           textures: [
             {
-              srcSet: `${sliceTexture} 800w, ${sliceTextureLarge} 1920w`,
+              srcSet: `${articleShowcase} 800w, ${articleShowcase} 1920w`,
               placeholder: sliceTexturePlaceholder,
             },
           ],
         }}
       />
-      <Profile
-        sectionRef={details}
-        visible={visibleSections.includes(details.current)}
-        id="details"
+      <ProjectSummary
+        id="contact-container"
+        alternate
+        sectionRef={contact}
+        visible={visibleSections.includes(contact.current)}
+        index={4}
+        title="Get in Touch"
+        description="Have questions or want to collaborate? Reach out to me!"
+        buttonText="Contact Me"
+        buttonLink="/contact"
+        model={{
+          type: 'phone',
+          alt: 'A professional headshot of me, smiling and looking approachable, set against a neutral background.',
+          textures: [
+            {
+              srcSet: `${contactShowcase1} 375w, ${contactShowcase1} 750w`,
+              placeholder: gamestackTexturePlaceholder,
+            },
+            {
+              srcSet: `${contactShowcase2} 375w, ${contactShowcase2} 750w`,
+              placeholder: gamestackTexture2Placeholder,
+            },
+          ],
+        }}
       />
       <Footer />
     </div>

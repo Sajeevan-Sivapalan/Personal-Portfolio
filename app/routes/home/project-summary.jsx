@@ -58,7 +58,7 @@ export function ProjectSummary({
         data-device={device}
         viewBox="0 0 751 136"
       >
-        <use href={`${katakana}#katakana-project`} />
+        <use href={`${katakana}#katakana-sajeevan`} />
       </svg>
     );
   }
