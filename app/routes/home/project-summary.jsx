@@ -100,79 +100,85 @@ export function ProjectSummary({
 
   function renderPreview(visible) {
     console.log("Preview : " + visible);
-    return (
-      <div className={styles.preview}>
-        {model.type === 'laptop' && (
-          <>
-            {renderKatakana('laptop', visible)}
-            <div className={styles.model} data-device="laptop">
-              {!modelLoaded && (
-                <Loader center className={styles.loader} data-visible={visible} />
-              )}
-              {isHydrated && visible && (
-                <Suspense>
-                  <Model
-                    alt={model.alt}
-                    cameraPosition={{ x: 0, y: 0, z: 8 }}
-                    showDelay={700}
-                    onLoad={handleModelLoad}
-                    show={visible}
-                    models={[
-                      {
-                        ...deviceModels.laptop,
-                        texture: {
-                          ...model.textures[0],
-                          sizes: laptopSizes,
+    
+    try {
+      return (
+        <div className={styles.preview}>
+          {model.type === 'laptop' && (
+            <>
+              {renderKatakana('laptop', visible)}
+              <div className={styles.model} data-device="laptop">
+                {!modelLoaded && (
+                  <Loader center className={styles.loader} data-visible={visible} />
+                )}
+                {isHydrated && visible && (
+                  <Suspense>
+                    <Model
+                      alt={model.alt}
+                      cameraPosition={{ x: 0, y: 0, z: 8 }}
+                      showDelay={700}
+                      onLoad={handleModelLoad}
+                      show={visible}
+                      models={[
+                        {
+                          ...deviceModels.laptop,
+                          texture: {
+                            ...model.textures[0],
+                            sizes: laptopSizes,
+                          },
                         },
-                      },
-                    ]}
-                  />
-                </Suspense>
-              )}
-            </div>
-          </>
-        )}
-        {model.type === 'phone' && (
-          <>
-            {renderKatakana('phone', visible)}
-            <div className={styles.model} data-device="phone">
-              {!modelLoaded && (
-                <Loader center className={styles.loader} data-visible={visible} />
-              )}
-              {isHydrated && visible && (
-                <Suspense>
-                  <Model
-                    alt={model.alt}
-                    cameraPosition={{ x: 0, y: 0, z: 11.5 }}
-                    showDelay={300}
-                    onLoad={handleModelLoad}
-                    show={visible}
-                    models={[
-                      {
-                        ...deviceModels.phone,
-                        position: { x: -0.6, y: 1.1, z: 0 },
-                        texture: {
-                          ...model.textures[0],
-                          sizes: phoneSizes,
+                      ]}
+                    />
+                  </Suspense>
+                )}
+              </div>
+            </>
+          )}
+          {model.type === 'phone' && (
+            <>
+              {renderKatakana('phone', visible)}
+              <div className={styles.model} data-device="phone">
+                {!modelLoaded && (
+                  <Loader center className={styles.loader} data-visible={visible} />
+                )}
+                {isHydrated && visible && (
+                  <Suspense>
+                    <Model
+                      alt={model.alt}
+                      cameraPosition={{ x: 0, y: 0, z: 11.5 }}
+                      showDelay={300}
+                      onLoad={handleModelLoad}
+                      show={visible}
+                      models={[
+                        {
+                          ...deviceModels.phone,
+                          position: { x: -0.6, y: 1.1, z: 0 },
+                          texture: {
+                            ...model.textures[0],
+                            sizes: phoneSizes,
+                          },
                         },
-                      },
-                      {
-                        ...deviceModels.phone,
-                        position: { x: 0.6, y: -0.5, z: 0.3 },
-                        texture: {
-                          ...model.textures[1],
-                          sizes: phoneSizes,
+                        {
+                          ...deviceModels.phone,
+                          position: { x: 0.6, y: -0.5, z: 0.3 },
+                          texture: {
+                            ...model.textures[1],
+                            sizes: phoneSizes,
+                          },
                         },
-                      },
-                    ]}
-                  />
-                </Suspense>
-              )}
-            </div>
-          </>
-        )}
-      </div>
-    );
+                      ]}
+                    />
+                  </Suspense>
+                )}
+              </div>
+            </>
+          )}
+        </div>
+      );
+    } catch (error) {
+      console.error("Error rendering preview:", error);
+      return null;
+    }
   }
 
   return (
