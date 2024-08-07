@@ -103,10 +103,10 @@ export function Error({ error }) {
                     iconHoverShift
                     className={styles.button}
                     data-visible={visible}
-                    href=""
+                    href="https://www.youtube.com/watch?v=EuQzHGcsjlA"
                     icon="chevron-right"
                   >
-                    
+                    Emotional support
                   </Button>
                 ) : (
                   <Button

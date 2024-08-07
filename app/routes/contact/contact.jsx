@@ -1,239 +1,242 @@
-import profileImgLarge from '~/assets/profile.jpeg';
-import profileImgPlaceholder from '~/assets/profile-placeholder.jpg';
-import profileImg from '~/assets/profile.jpeg';
 import { Button } from '~/components/button';
 import { DecoderText } from '~/components/decoder-text';
 import { Divider } from '~/components/divider';
+import { Footer } from '~/components/footer';
 import { Heading } from '~/components/heading';
-import { Image } from '~/components/image';
-import { Link } from '~/components/link';
+import { Icon } from '~/components/icon';
+import { Input } from '~/components/input';
 import { Section } from '~/components/section';
 import { Text } from '~/components/text';
+import { tokens } from '~/components/theme-provider/theme';
 import { Transition } from '~/components/transition';
-import { Fragment, useState } from 'react';
-import { media } from '~/utils/style';
-import katakana from '~/routes/home/katakana.svg';
-import styles from './contact.module.css';
+import { useFormInput } from '~/hooks';
+import { useRef } from 'react';
+import { cssProps, msToNum, numToMs } from '~/utils/style';
 import { baseMeta } from '~/utils/meta';
-import {
-  ProjectContainer,
-  ProjectSection,
-  ProjectSectionColumns,
-  ProjectSectionContent,
-  ProjectSectionHeading,
-  ProjectSectionText,
-  ProjectTextRow,
-} from '~/layouts/project';
-import { ThemeProvider } from '~/components/theme-provider';
-import imageSprBackgroundVolcanismLarge from '~/assets/spr-background-volcanism-large.jpg';
-import imageSprBackgroundVolcanismPlaceholder from '~/assets/spr-background-volcanism-placeholder.jpg';
-import imageSprBackgroundVolcanism from '~/assets/spr-background-volcanism.jpg';
-import { ProjectSummary } from '../home/project-summary';
-import sprTexturePlaceholder from '~/assets/spr-lesson-builder-dark-placeholder.jpg';
-import linkedInShowcase from '~/assets/linked-in-common-bg-1.jpg';
-import { useEffect, useRef } from 'react';
-
-const ProfileText = ({ visible, titleId }) => (
-  <Fragment>
-    <Heading className={styles.title} data-visible={visible} level={3} id={titleId}>
-      <DecoderText text="Get in Touch" start={visible} delay={500} />
-    </Heading>
-    <Text className={styles.description} data-visible={visible} size="l" as="p">
-      I'm always open to discussing new opportunities, projects, or collaborations. 
-      Feel free to reach out if you have any questions, ideas, or just want to say hi!
-    </Text>
-    <Text className={styles.description} data-visible={visible} size="l" as="p">
-      
-    </Text>
-  </Fragment>
-);
+import { Form, useActionData, useNavigation } from '@remix-run/react';
+import { json } from '@remix-run/cloudflare';
+import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
+import styles from './contact.module.css';
 
 export const meta = () => {
-  return baseMeta({ prefix: 'Profile' });
+  return baseMeta({
+    title: 'Contact',
+    description:
+      'Send me a message if you’re interested in discussing a project or if you just want to say hi',
+  });
 };
 
+const MAX_EMAIL_LENGTH = 512;
+const MAX_MESSAGE_LENGTH = 4096;
+const EMAIL_PATTERN = /(.+)@(.+){2,}\.(.+){2,}/;
 
-export const Contact = ({ id, visible, sectionRef }) => {
-  const [focused, setFocused] = useState(true);
-  const titleId = `${id}-title`;
-  const [visibleSections, setVisibleSections] = useState([]);
-  const [scrollIndicatorHidden, setScrollIndicatorHidden] = useState(false);
-  const LinkedIn = useRef();
+export async function action({ context, request }) {
+  const ses = new SESClient({
+    region: 'us-east-1',
+    credentials: {
+      accessKeyId: context.cloudflare.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: context.cloudflare.env.AWS_SECRET_ACCESS_KEY,
+    },
+  });
 
-  useEffect(() => {
-    const sections = [LinkedIn];
+  const formData = await request.formData();
+  const isBot = String(formData.get('name'));
+  const email = String(formData.get('email'));
+  const message = String(formData.get('message'));
+  const errors = {};
 
-    const sectionObserver = new IntersectionObserver(
-      (entries, observer) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const section = entry.target;
-            observer.unobserve(section);
-            if (visibleSections.includes(section)) return;
-            setVisibleSections(prevSections => [...prevSections, section]);
-          }
-        });
+  // Return without sending if a bot trips the honeypot
+  if (isBot) return json({ success: true });
+
+  // Handle input validation on the server
+  if (!email || !EMAIL_PATTERN.test(email)) {
+    errors.email = 'Please enter a valid email address.';
+  }
+
+  if (!message) {
+    errors.message = 'Please enter a message.';
+  }
+
+  if (email.length > MAX_EMAIL_LENGTH) {
+    errors.email = `Email address must be shorter than ${MAX_EMAIL_LENGTH} characters.`;
+  }
+
+  if (message.length > MAX_MESSAGE_LENGTH) {
+    errors.message = `Message must be shorter than ${MAX_MESSAGE_LENGTH} characters.`;
+  }
+
+  if (Object.keys(errors).length > 0) {
+    return json({ errors });
+  }
+
+  // Send email via Amazon SES
+  await ses.send(
+    new SendEmailCommand({
+      Destination: {
+        ToAddresses: [context.cloudflare.env.EMAIL],
       },
-      { rootMargin: '0px 0px -10% 0px', threshold: 0.1 }
-    );
-
-    const indicatorObserver = new IntersectionObserver(
-      ([entry]) => {
-        setScrollIndicatorHidden(!entry.isIntersecting);
+      Message: {
+        Body: {
+          Text: {
+            Data: `From: ${email}\n\n${message}`,
+          },
+        },
+        Subject: {
+          Data: `Portfolio message from ${email}`,
+        },
       },
-      { rootMargin: '-100% 0px 0px 0px' }
-    );
+      Source: `Portfolio <${context.cloudflare.env.FROM_EMAIL}>`,
+      ReplyToAddresses: [email],
+    })
+  );
 
-    sections.forEach(section => {
-      sectionObserver.observe(section.current);
-    });
+  return json({ success: true });
+}
 
-    return () => {
-      sectionObserver.disconnect();
-      indicatorObserver.disconnect();
-    };
-  }, [visibleSections]);
-  
-  
+export const Contact = () => {
+  const errorRef = useRef();
+  const email = useFormInput('');
+  const message = useFormInput('');
+  const initDelay = tokens.base.durationS;
+  const actionData = useActionData();
+  const { state } = useNavigation();
+  const sending = state === 'submitting';
+
   return (
-    <>
-      <Section
-      className={styles.profile}
-      onFocus={() => setFocused(true)}
-      onBlur={() => setFocused(false)}
-      as="section"
-      id={id}
-      ref={sectionRef}
-      aria-labelledby={titleId}
-      tabIndex={-1}
-    >
-      <Transition in={visible || focused} timeout={0}>
-        {({ visible, nodeRef }) => (
-          <div className={styles.content} ref={nodeRef}>
-            <div className={styles.column}>
-            <div className={styles.column}>
-              <div className={styles.tag} aria-hidden>
-                <Divider
-                  notchWidth="64px"
-                  notchHeight="8px"
-                  collapsed={!visible}
-                  collapseDelay={1000}
-                />
-              </div>
-            </div>
-              <ProfileText visible={visible} titleId={titleId} />
-              <Button
-                secondary
-                className={styles.button}
-                data-visible={visible}
-                href="mailto:sajeesiva12@gmail.com?subject=Contact%20from%20Portfolio&body=Hi%20Sajeevan,%0A%0AI%20would%20like%20to%20discuss..."
-                icon="send"
-              >
-                Email Me
-              </Button>
-            </div>
+    <Section className={styles.contact}>
+      <Transition unmount in={!actionData?.success} timeout={1600}>
+        {({ status, nodeRef }) => (
+          <Form
+            unstable_viewTransition
+            className={styles.form}
+            method="post"
+            ref={nodeRef}
+          >
+            <Heading
+              className={styles.title}
+              data-status={status}
+              level={3}
+              as="h1"
+              style={getDelay(tokens.base.durationXS, initDelay, 0.3)}
+            >
+              <DecoderText text="Say hello" start={status !== 'exited'} delay={300} />
+            </Heading>
+            <Divider
+              className={styles.divider}
+              data-status={status}
+              style={getDelay(tokens.base.durationXS, initDelay, 0.4)}
+            />
+            {/* Hidden honeypot field to identify bots */}
+            <Input
+              className={styles.botkiller}
+              label="Name"
+              name="name"
+              maxLength={MAX_EMAIL_LENGTH}
+            />
+            <Input
+              required
+              className={styles.input}
+              data-status={status}
+              style={getDelay(tokens.base.durationXS, initDelay)}
+              autoComplete="email"
+              label="Your email"
+              type="email"
+              name="email"
+              maxLength={MAX_EMAIL_LENGTH}
+              {...email}
+            />
+            <Input
+              required
+              multiline
+              className={styles.input}
+              data-status={status}
+              style={getDelay(tokens.base.durationS, initDelay)}
+              autoComplete="off"
+              label="Message"
+              name="message"
+              maxLength={MAX_MESSAGE_LENGTH}
+              {...message}
+            />
+            <Transition
+              unmount
+              in={!sending && actionData?.errors}
+              timeout={msToNum(tokens.base.durationM)}
+            >
+              {({ status: errorStatus, nodeRef }) => (
+                <div
+                  className={styles.formError}
+                  ref={nodeRef}
+                  data-status={errorStatus}
+                  style={cssProps({
+                    height: errorStatus ? errorRef.current?.offsetHeight : 0,
+                  })}
+                >
+                  <div className={styles.formErrorContent} ref={errorRef}>
+                    <div className={styles.formErrorMessage}>
+                      <Icon className={styles.formErrorIcon} icon="error" />
+                      {actionData?.errors?.email}
+                      {actionData?.errors?.message}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </Transition>
+            <Button
+              className={styles.button}
+              data-status={status}
+              data-sending={sending}
+              style={getDelay(tokens.base.durationM, initDelay)}
+              disabled={sending}
+              loading={sending}
+              loadingText="Sending..."
+              icon="send"
+              type="submit"
+            >
+              Send message
+            </Button>
+          </Form>
+        )}
+      </Transition>
+      <Transition unmount in={actionData?.success}>
+        {({ status, nodeRef }) => (
+          <div className={styles.complete} aria-live="polite" ref={nodeRef}>
+            <Heading
+              level={3}
+              as="h3"
+              className={styles.completeTitle}
+              data-status={status}
+            >
+              Message Sent
+            </Heading>
+            <Text
+              size="l"
+              as="p"
+              className={styles.completeText}
+              data-status={status}
+              style={getDelay(tokens.base.durationXS)}
+            >
+              I’ll get back to you within a couple days, sit tight
+            </Text>
+            <Button
+              secondary
+              iconHoverShift
+              className={styles.completeButton}
+              data-status={status}
+              style={getDelay(tokens.base.durationM)}
+              href="/"
+              icon="chevron-right"
+            >
+              Back to homepage
+            </Button>
           </div>
         )}
       </Transition>
+      <Footer className={styles.footer} />
     </Section>
-
-
-    
-    <ProjectContainer>
-        <ThemeProvider theme="dark" data-invert>
-          <ProjectSection
-            backgroundOverlayOpacity={0.5}
-            backgroundElement={
-              <Image
-                srcSet={`${imageSprBackgroundVolcanism} 1280w, ${imageSprBackgroundVolcanismLarge} 2560w`}
-                width={1280}
-                height={900}
-                placeholder={imageSprBackgroundVolcanismPlaceholder}
-                alt="A dramatic ocean scene with lava forming a new land mass."
-                sizes="100vw"
-              />
-            }
-          >
-            <div className={styles.home}>
-              <ProjectSummary
-                id="LinkedIn-container"
-                sectionRef={LinkedIn}
-                visible={visibleSections.includes(LinkedIn.current)}
-                index="Sajeevan"
-                title="Connect with Me on LinkedIn"
-                description="Discover more about my professional experience and educational background on LinkedIn. I’m eager to connect with industry professionals to share insights and explore collaboration opportunities."
-                buttonText=" View LinkedIn Profile"
-                buttonLink="https://www.linkedin.com/in/sajeevan-sivapalan-65b903215/"
-                model={{
-                  type: 'laptop',
-                  alt: 'An image showcasing a completed project, highlighting the intricate details and design elements',
-                  textures: [
-                    {
-                      srcSet: `${linkedInShowcase} 1280w, ${linkedInShowcase} 2560w`,
-                      placeholder: sprTexturePlaceholder,
-                    },
-                  ],
-                }}
-              />
-            </div>
-          </ProjectSection>
-        </ThemeProvider>
-      </ProjectContainer>
-
-
-      {/* <ProjectContainer>
-        <ThemeProvider theme="dark" data-invert>
-          <ProjectSection
-            backgroundOverlayOpacity={0.5}
-            backgroundElement={
-              <Image
-                srcSet={`${imageSprBackgroundVolcanism} 1280w, ${imageSprBackgroundVolcanismLarge} 2560w`}
-                width={1280}
-                height={900}
-                placeholder={imageSprBackgroundVolcanismPlaceholder}
-                alt="A dramatic ocean scene with lava forming a new land mass."
-                sizes="100vw"
-              />
-            }
-          >
-            <ProjectSectionColumns width="full">
-              <ProjectSectionContent width="full">
-                <ProjectTextRow width="s">
-                  <ProjectSectionHeading>Experience</ProjectSectionHeading>
-                  <ProjectSectionText>
-                    <h2>SenzMate IoT Intelligence</h2>
-                    <h1>Associate Software Developer</h1>
-                    <p>January 2024 - Present</p>
-                    <p>Full Time</p>
-                  </ProjectSectionText>
-                  <ProjectSectionText>
-                    <h2>SenzMate IoT Intelligence</h2>
-                    <h1>Intern Software Developer</h1>
-                    <p>July 2023 - December 2023 (6 months)</p>
-                    <p>Internship</p>
-                  </ProjectSectionText>                  
-                </ProjectTextRow>
-              </ProjectSectionContent>  
-              
-              <ProjectSectionContent width="full">
-                <ProjectTextRow width="s">
-                <ProjectSectionHeading>Education</ProjectSectionHeading>
-                <ProjectSectionText>
-                    <h2>Sri Lanka Institute of Information Technology</h2>
-                    <p>Information Technology Specializing in Software Engineering</p>
-                    <p>2021 - 2025</p>
-                  </ProjectSectionText>
-                  <ProjectSectionText>
-                    <h2>S.Thomas' College, Mount Lavinia</h2>
-                    <p>Physical Science</p>
-                    <p>2011 - 2020</p>
-                  </ProjectSectionText>
-                </ProjectTextRow>
-              </ProjectSectionContent>
-            </ProjectSectionColumns>
-          </ProjectSection>
-        </ThemeProvider>
-      </ProjectContainer> */}
-    </>
   );
 };
+
+function getDelay(delayMs, offset = numToMs(0), multiplier = 1) {
+  const numDelay = msToNum(delayMs) * multiplier;
+  return cssProps({ delay: numToMs((msToNum(offset) + numDelay).toFixed(0)) });
+}
