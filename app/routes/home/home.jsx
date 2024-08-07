@@ -14,6 +14,31 @@ import { Intro } from './intro';
 import { ProjectSummary } from './project-summary';
 import { useEffect, useRef, useState } from 'react';
 import styles from './home.module.css';
+import React from 'react';
+
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("Error caught in ErrorBoundary: ", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <h1>Something went wrong.</h1>;
+    }
+
+    return this.props.children;
+  }
+}
+
 
 // Prefetch draco decoader wasm
 export const links = () => {
@@ -52,43 +77,50 @@ export const Home = () => {
   const contact = useRef();
 
   useEffect(() => {
-    //const sections = [intro, projects, profile, article, details];
     const sections = [intro, projects, profile, article, contact];
-
+  
     const sectionObserver = new IntersectionObserver(
       (entries, observer) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             const section = entry.target;
             observer.unobserve(section);
-            if (visibleSections.includes(section)) return;
-            setVisibleSections(prevSections => [...prevSections, section]);
+            setVisibleSections(prevSections => {
+              if (!prevSections.includes(section)) {
+                return [...prevSections, section];
+              }
+              return prevSections;
+            });
           }
         });
       },
       { rootMargin: '0px 0px -10% 0px', threshold: 0.1 }
     );
-
+  
     const indicatorObserver = new IntersectionObserver(
       ([entry]) => {
         setScrollIndicatorHidden(!entry.isIntersecting);
       },
       { rootMargin: '-100% 0px 0px 0px' }
     );
-
+  
     sections.forEach(section => {
       sectionObserver.observe(section.current);
     });
-
-    indicatorObserver.observe(intro.current);
-
+  
+    if (intro.current) {
+      indicatorObserver.observe(intro.current);
+    }
+  
     return () => {
       sectionObserver.disconnect();
       indicatorObserver.disconnect();
     };
-  }, [visibleSections]);
+  }, []);  // `visibleSections` is not a dependency here
+  
 
   return (
+    <ErrorBoundary>
     <div className={styles.home}>
       <Intro
         id="intro"
@@ -187,5 +219,6 @@ export const Home = () => {
       />
       <Footer />
     </div>
+    </ErrorBoundary>
   );
 };
