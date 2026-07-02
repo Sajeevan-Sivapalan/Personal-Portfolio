@@ -25,7 +25,6 @@ import {
   ShaderMaterial,
   Vector3,
   WebGLRenderTarget,
-  WebGLRenderer,
 } from 'three';
 import { HorizontalBlurShader, VerticalBlurShader } from 'three-stdlib';
 import { resolveSrcFromSrcSet } from '~/utils/image';
@@ -33,6 +32,7 @@ import { classes, cssProps, numToMs } from '~/utils/style';
 import {
   cleanRenderer,
   cleanScene,
+  createWebGLRenderer,
   modelLoader,
   removeLights,
   textureLoader,
@@ -91,15 +91,17 @@ export const Model = ({
   useEffect(() => {
     const { clientWidth, clientHeight } = container.current;
 
-    renderer.current = new WebGLRenderer({
-      canvas: canvas.current,
+    renderer.current = createWebGLRenderer(canvas.current, {
       alpha: true,
       antialias: false,
-      powerPreference: 'high-performance',
-      failIfMajorPerformanceCaveat: true,
     });
 
-    renderer.current.setPixelRatio(2);
+    if (!renderer.current) {
+      setLoaded(true);
+      onLoad?.();
+      return () => {};
+    }
+
     renderer.current.setSize(clientWidth, clientHeight);
     renderer.current.outputColorSpace = SRGBColorSpace;
 
@@ -211,8 +213,8 @@ export const Model = ({
     const unsubscribeY = rotationY.on('change', renderFrame);
 
     return () => {
-      renderTarget.current.dispose();
-      renderTargetBlur.current.dispose();
+      renderTarget.current?.dispose();
+      renderTargetBlur.current?.dispose();
       removeLights(lights.current);
       cleanScene(scene.current);
       cleanRenderer(renderer.current);
@@ -246,6 +248,10 @@ export const Model = ({
 
   // Handle render passes for a single frame
   const renderFrame = useCallback(() => {
+    if (!renderer.current || !scene.current || !camera.current || !modelGroup.current) {
+      return;
+    }
+
     const blurAmount = 5;
 
     // Remove the background
@@ -305,7 +311,7 @@ export const Model = ({
   // Handle window resize
   useEffect(() => {
     const handleResize = () => {
-      if (!container.current) return;
+      if (!container.current || !renderer.current || !camera.current) return;
 
       const { clientWidth, clientHeight } = container.current;
 
@@ -369,6 +375,12 @@ const Device = ({
   const placeholderScreen = createRef();
 
   useEffect(() => {
+    if (!renderer?.current || !modelGroup?.current) {
+      setLoaded(true);
+      onLoad?.();
+      return;
+    }
+
     const applyScreenTexture = async (texture, node) => {
       texture.colorSpace = SRGBColorSpace;
       texture.flipY = false;

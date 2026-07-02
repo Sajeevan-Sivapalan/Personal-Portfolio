@@ -14,11 +14,10 @@ import {
   SphereGeometry,
   UniformsUtils,
   Vector2,
-  WebGLRenderer,
 } from 'three';
 import { media } from '~/utils/style';
 import { throttle } from '~/utils/throttle';
-import { cleanRenderer, cleanScene, removeLights } from '~/utils/three';
+import { cleanRenderer, cleanScene, createWebGLRenderer, removeLights } from '~/utils/three';
 import fragmentShader from './displacement-sphere-fragment.glsl?raw';
 import vertexShader from './displacement-sphere-vertex.glsl?raw';
 import styles from './displacement-sphere.module.css';
@@ -51,15 +50,16 @@ export const DisplacementSphere = props => {
   useEffect(() => {
     const { innerWidth, innerHeight } = window;
     mouse.current = new Vector2(0.8, 0.5);
-    renderer.current = new WebGLRenderer({
-      canvas: canvasRef.current,
-      antialias: false,
+    renderer.current = createWebGLRenderer(canvasRef.current, {
       alpha: true,
-      powerPreference: 'high-performance',
-      failIfMajorPerformanceCaveat: true,
+      antialias: false,
     });
+
+    if (!renderer.current) {
+      return;
+    }
+
     renderer.current.setSize(innerWidth, innerHeight);
-    renderer.current.setPixelRatio(1);
     renderer.current.outputColorSpace = LinearSRGBColorSpace;
 
     camera.current = new PerspectiveCamera(54, innerWidth / innerHeight, 0.1, 100);

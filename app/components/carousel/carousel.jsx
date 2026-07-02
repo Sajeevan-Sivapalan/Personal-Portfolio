@@ -10,11 +10,10 @@ import {
   LinearSRGBColorSpace,
   Scene,
   ShaderMaterial,
-  WebGLRenderer,
 } from 'three';
 import { resolveSrcFromSrcSet } from '~/utils/image';
 import { cssProps } from '~/utils/style';
-import { cleanRenderer, cleanScene, textureLoader } from '~/utils/three';
+import { cleanRenderer, cleanScene, createWebGLRenderer, textureLoader } from '~/utils/three';
 import styles from './carousel.module.css';
 import fragment from './carousel-fragment.glsl?raw';
 import vertex from './carousel-vertex.glsl?raw';
@@ -67,16 +66,18 @@ export const Carousel = ({ width, height, images, placeholder, ...rest }) => {
 
   useEffect(() => {
     const cameraOptions = [width / -2, width / 2, height / 2, height / -2, 1, 1000];
-    renderer.current = new WebGLRenderer({
-      canvas: canvas.current,
-      antialias: false,
+    renderer.current = createWebGLRenderer(canvas.current, {
       alpha: true,
-      powerPreference: 'high-performance',
-      failIfMajorPerformanceCaveat: true,
+      antialias: false,
     });
+
+    if (!renderer.current) {
+      setLoaded(true);
+      return;
+    }
+
     camera.current = new OrthographicCamera(...cameraOptions);
     scene.current = new Scene();
-    renderer.current.setPixelRatio(2);
     renderer.current.setClearColor(0x111111, 1.0);
     renderer.current.setSize(width, height);
     renderer.current.domElement.style.width = '100%';
@@ -95,6 +96,8 @@ export const Carousel = ({ width, height, images, placeholder, ...rest }) => {
     let mounted = true;
 
     const loadImages = async () => {
+      if (!renderer.current) return;
+
       const anisotropy = renderer.current.capabilities.getMaxAnisotropy();
 
       const texturePromises = images.map(async image => {

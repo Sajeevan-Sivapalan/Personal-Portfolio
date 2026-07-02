@@ -1,4 +1,4 @@
-import { Cache, TextureLoader } from 'three';
+import { Cache, TextureLoader, WebGLRenderer } from 'three';
 import { DRACOLoader, GLTFLoader } from 'three-stdlib';
 
 // Enable caching for all loaders
@@ -14,6 +14,29 @@ gltfLoader.setDRACOLoader(dracoLoader);
  */
 export const modelLoader = gltfLoader;
 export const textureLoader = new TextureLoader();
+
+export const createWebGLRenderer = (canvas, options = {}) => {
+  if (typeof window === 'undefined' || !canvas) return null;
+
+  try {
+    const renderer = new WebGLRenderer({
+      canvas,
+      alpha: true,
+      antialias: false,
+      powerPreference: 'default',
+      failIfMajorPerformanceCaveat: false,
+      ...options,
+    });
+
+    const pixelRatio = Math.min(Math.max(window.devicePixelRatio || 1, 1), 1.5);
+    renderer.setPixelRatio(pixelRatio);
+
+    return renderer;
+  } catch (error) {
+    console.warn('WebGL renderer could not be initialized.', error);
+    return null;
+  }
+};
 
 /**
  * Clean up a scene's materials and geometry
